@@ -3,6 +3,7 @@ package com.rits.springelasticsearch.resource;
 import com.rits.springelasticsearch.model.Users;
 import com.rits.springelasticsearch.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,9 @@ public class SearchResource {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ElasticsearchTemplate elasticsearchTemplate;
 
 
     @GetMapping(value = "/name/{text}")
@@ -36,5 +40,10 @@ public class SearchResource {
         users.forEach(usersList::add);
         return usersList;
 
+    }
+
+    @GetMapping(value = "/delete")
+    public boolean delete(){
+      return  elasticsearchTemplate.deleteIndex(Users.class);
     }
 }
